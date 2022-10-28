@@ -1,8 +1,8 @@
 package com.mindex.challenge.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,35 +36,32 @@ public class ReportingStructureServiceImplTest {
 	@Before
 	public void setup() {
 		reportingStructureUrl = "http://localhost:" + port + "/reporting-structure/employee/";
-		employeeReportingCountMap.put("16a596ae-edd3-4847-99fe-c4518e82c86f", 4);
-		employeeReportingCountMap.put("b7839309-3348-463b-a7e3-5de1c168beb3", 0);
-		employeeReportingCountMap.put("03aa1462-ffa9-4978-901b-7c001562cf6f", 2);
-		employeeReportingCountMap.put("62c1084e-6e34-4630-93fd-9153afb65309", 0);
-		employeeReportingCountMap.put("c0c2293d-16bd-4603-8e08-638a9d18b22c", 0);
+
 	}
 
 	@Test
 	public void should_return_exception_for_get_employee_reporting_structure_if_employee_not_exist() {
+		reportingStructureUrl = "http://localhost:" + port + "/reporting-structure/employee/";
 		ResponseEntity<ReportingStructure> response = restTemplate
-				.getForEntity(reportingStructureUrl + "/employee-id-does-not-exist", ReportingStructure.class);
+				.getForEntity(reportingStructureUrl + "employee-id-does-not-exist", ReportingStructure.class);
 		assertNotNull(response);
-		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
+		assertTrue(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
 
 	}
-
-	@Test
+	
 	public void test_should_get_employee_reporting_structure() {
-		for (String employeeId : employeeReportingCountMap.keySet()) {
-			int expectedNumOfReports = employeeReportingCountMap.get(employeeId);
-			ResponseEntity<ReportingStructure> createReportingStructureResponse = restTemplate
-					.getForEntity(reportingStructureUrl + "/" + employeeId, ReportingStructure.class);
-			assertNotNull(createReportingStructureResponse);
-			assertTrue(createReportingStructureResponse.getStatusCode() == HttpStatus.OK);
-			ReportingStructure reportingStructure = createReportingStructureResponse.getBody();
-			assertNotNull(reportingStructure);
-			assertEquals(reportingStructure.getEmployee().getEmployeeId(), employeeId);
-			assertEquals(reportingStructure.getNumberOfReports(), expectedNumOfReports);
-		}
+		String employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+		int expectedNumOfReports = 4;
+		reportingStructureUrl = "http://localhost:" + port + "/reporting-structure/employee/";
+		ResponseEntity<ReportingStructure> createReportingStructureResponse = restTemplate
+				.getForEntity(reportingStructureUrl + employeeId, ReportingStructure.class);
+		assertNotNull(createReportingStructureResponse);
+		ReportingStructure reportingStructure = createReportingStructureResponse.getBody();
+		assertNotNull(reportingStructure);
+		 assertNotNull(reportingStructure.getEmployee());
+		 assertEquals(employeeId, reportingStructure.getEmployee().getEmployeeId());
+		 assertNotNull(reportingStructure.getNumberOfReports());
+		assertEquals(reportingStructure.getNumberOfReports(), expectedNumOfReports);
 	}
 
 }
