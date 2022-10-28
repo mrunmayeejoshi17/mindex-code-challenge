@@ -92,4 +92,3 @@ Please upload your results to a publicly accessible Git repo. Free ones are prov
 * Compiled project using "gradlew clean build". Ran tests using "gradlew test"
 * For manual testing used postman to hit API's
 * API server was running on port 8080 (used boot dashboard to run API server in local)
-* Pull request for solution: https://github.com/mrunmayeejoshi17/mindex-code-challenge/pull/1
