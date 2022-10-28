@@ -84,3 +84,12 @@ Compensation from the persistence layer.
 
 ## Delivery
 Please upload your results to a publicly accessible Git repo. Free ones are provided by Github and Bitbucket.
+
+## Solution Notes
+* I used eclipse for my development.
+* To run junit tests in my eclipse, added a new test dependancy in the build.gradle
+* Tried to basic field validation for both the solutions Compensation and Reporting Structure
+* For Compensation- validations like-: Date and Salary can not be null, salary should be greater than zero
+* Compiled project using "gradlew clean build"
+* For manual testing used postman to hit API's
+* API server was running on port 8080 (used boot dashboard to run API server in local)
