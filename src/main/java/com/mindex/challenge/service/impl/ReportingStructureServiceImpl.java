@@ -1,9 +1,8 @@
 package com.mindex.challenge.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,22 +25,30 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
 	@Override
 	public ReportingStructure getReportingStructure(String employeeId) {
 		LOG.debug("Getting reporting structure for employee id: [{}]", employeeId);
-		List<Employee> employees = employeeRepository.findAll();
-		if (CollectionUtils.isEmpty(employees)) {
+		List<Employee> allEmployees = employeeRepository.findAll();
+		if (CollectionUtils.isEmpty(allEmployees)) {
 			LOG.error("No employee data");
 			return null;
 		}
-		Map<String, Employee> employeeByIdMap = employees.stream()
-				.collect(Collectors.toMap(Employee::getEmployeeId, Function.identity()));
-
+		Map<String, Employee> employeeByIdMap = new HashMap<>();
+		allEmployees.stream().forEach(e -> {
+			if(!employeeByIdMap.containsKey(e.getEmployeeId())) {
+				employeeByIdMap.put(e.getEmployeeId(),e);
+			}
+		});
 		if (!employeeByIdMap.containsKey(employeeId)) {
 			LOG.error("Invalid employee id :" + employeeId);
 			return null;
 		}
 		Employee employee = employeeByIdMap.get(employeeId);
-		Map<String, List<Employee>> managerReporteesMap = employees.stream()
-				.filter(e -> !CollectionUtils.isEmpty(e.getDirectReports()))
-				.collect(Collectors.toMap(Employee::getEmployeeId, Employee::getDirectReports));
+		Map<String, List<Employee>> managerReporteesMap = new HashMap<>();
+		employeeByIdMap.keySet().stream()
+				.filter(k -> !CollectionUtils.isEmpty(employeeByIdMap.get(k).getDirectReports()))
+				.forEach(k -> {
+					if(!managerReporteesMap.containsKey(k)) {
+						managerReporteesMap.put(k,employeeByIdMap.get(k).getDirectReports());
+					}
+				});
 		int reporteeCount = getReporteeCount(employeeId, managerReporteesMap);
 		LOG.debug("Total report count for employee [{}] is [{}]", employeeId, reporteeCount);
 		ReportingStructure rportingStructure = new ReportingStructure();
