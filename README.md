@@ -92,3 +92,23 @@ Please upload your results to a publicly accessible Git repo. Free ones are prov
 * Compiled project using "gradlew clean build". Ran tests using "gradlew test"
 * For manual testing used postman to hit API's
 * API server was running on port 8080 (used boot dashboard to run API server in local)
+* Following endpoints are created
+* Compensation:
+```
+* CREATE
+    * HTTP Method: POST 
+    * URL: localhost:8080/compensation/employee/{id}
+    * PAYLOAD: CompensationRequest
+    * RESPONSE: Compensation
+* READ
+    * HTTP Method: GET 
+    * URL: localhost:8080/compensation/employee/{id}
+    * RESPONSE: Compensation
+```
+* Reporting Structure:
+```
+* READ
+    * HTTP Method: GET 
+    * URL: localhost:8080/reporting-structure/employee/{id}
+    * RESPONSE: ReportingStructure
+```
